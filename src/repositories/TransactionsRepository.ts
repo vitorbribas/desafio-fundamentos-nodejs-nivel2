@@ -21,10 +21,29 @@ class TransactionsRepository {
   public all(): Transaction[] {
     return this.transactions;
   }
-  //
-  // public getBalance(): Balance {
-  //  // TODO
-  // }
+
+  public getBalance(): Balance {
+    const balance = this.transactions.reduce(
+      (accumulator: Balance, currentValue: Transaction) => {
+        switch (currentValue.type) {
+          case 'income':
+            accumulator.income += currentValue.value;
+            accumulator.total += currentValue.value;
+            break;
+          case 'outcome':
+            accumulator.outcome += currentValue.value;
+            accumulator.total -= currentValue.value;
+            break;
+          default:
+            break;
+        }
+        return accumulator;
+      },
+      { income: 0, outcome: 0, total: 0 },
+    );
+
+    return balance;
+  }
 
   public create({ title, value, type }: CreateTransactionDTO): Transaction {
     const transaction = new Transaction({ title, value, type });
