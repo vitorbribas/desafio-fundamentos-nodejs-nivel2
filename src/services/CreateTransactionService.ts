@@ -21,6 +21,11 @@ class CreateTransactionService {
         'Seu caixa está abaixo do necessário para esta transação.',
       );
     }
+
+    if (!['outcome', 'income'].includes(type)) {
+      throw new Error('Tipo de transação inválida.');
+    }
+
     const transaction = this.transactionsRepository.create({
       title,
       value,
